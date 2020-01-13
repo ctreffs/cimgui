@@ -1,4 +1,288 @@
 {
+  "ImGui_ImplGLUT_Init": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplGLUT_Init",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_Init",
+      "ov_cimguiname": "ImGui_ImplGLUT_Init",
+      "ret": "bool",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_InstallFuncs": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplGLUT_InstallFuncs",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_InstallFuncs",
+      "ov_cimguiname": "ImGui_ImplGLUT_InstallFuncs",
+      "ret": "void",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_KeyboardFunc": [
+    {
+      "args": "(unsigned char c,int x,int y)",
+      "argsT": [
+        {
+          "name": "c",
+          "type": "unsigned char"
+        },
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "argsoriginal": "(unsigned char c,int x,int y)",
+      "call_args": "(c,x,y)",
+      "cimguiname": "ImGui_ImplGLUT_KeyboardFunc",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_KeyboardFunc",
+      "ov_cimguiname": "ImGui_ImplGLUT_KeyboardFunc",
+      "ret": "void",
+      "signature": "(unsigned char,int,int)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_KeyboardUpFunc": [
+    {
+      "args": "(unsigned char c,int x,int y)",
+      "argsT": [
+        {
+          "name": "c",
+          "type": "unsigned char"
+        },
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "argsoriginal": "(unsigned char c,int x,int y)",
+      "call_args": "(c,x,y)",
+      "cimguiname": "ImGui_ImplGLUT_KeyboardUpFunc",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_KeyboardUpFunc",
+      "ov_cimguiname": "ImGui_ImplGLUT_KeyboardUpFunc",
+      "ret": "void",
+      "signature": "(unsigned char,int,int)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_MotionFunc": [
+    {
+      "args": "(int x,int y)",
+      "argsT": [
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "argsoriginal": "(int x,int y)",
+      "call_args": "(x,y)",
+      "cimguiname": "ImGui_ImplGLUT_MotionFunc",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_MotionFunc",
+      "ov_cimguiname": "ImGui_ImplGLUT_MotionFunc",
+      "ret": "void",
+      "signature": "(int,int)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_MouseFunc": [
+    {
+      "args": "(int button,int state,int x,int y)",
+      "argsT": [
+        {
+          "name": "button",
+          "type": "int"
+        },
+        {
+          "name": "state",
+          "type": "int"
+        },
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "argsoriginal": "(int button,int state,int x,int y)",
+      "call_args": "(button,state,x,y)",
+      "cimguiname": "ImGui_ImplGLUT_MouseFunc",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_MouseFunc",
+      "ov_cimguiname": "ImGui_ImplGLUT_MouseFunc",
+      "ret": "void",
+      "signature": "(int,int,int,int)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_MouseWheelFunc": [
+    {
+      "args": "(int button,int dir,int x,int y)",
+      "argsT": [
+        {
+          "name": "button",
+          "type": "int"
+        },
+        {
+          "name": "dir",
+          "type": "int"
+        },
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "argsoriginal": "(int button,int dir,int x,int y)",
+      "call_args": "(button,dir,x,y)",
+      "cimguiname": "ImGui_ImplGLUT_MouseWheelFunc",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_MouseWheelFunc",
+      "ov_cimguiname": "ImGui_ImplGLUT_MouseWheelFunc",
+      "ret": "void",
+      "signature": "(int,int,int,int)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_NewFrame": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplGLUT_NewFrame",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_NewFrame",
+      "ov_cimguiname": "ImGui_ImplGLUT_NewFrame",
+      "ret": "void",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_ReshapeFunc": [
+    {
+      "args": "(int w,int h)",
+      "argsT": [
+        {
+          "name": "w",
+          "type": "int"
+        },
+        {
+          "name": "h",
+          "type": "int"
+        }
+      ],
+      "argsoriginal": "(int w,int h)",
+      "call_args": "(w,h)",
+      "cimguiname": "ImGui_ImplGLUT_ReshapeFunc",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_ReshapeFunc",
+      "ov_cimguiname": "ImGui_ImplGLUT_ReshapeFunc",
+      "ret": "void",
+      "signature": "(int,int)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_Shutdown": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplGLUT_Shutdown",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_Shutdown",
+      "ov_cimguiname": "ImGui_ImplGLUT_Shutdown",
+      "ret": "void",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_SpecialFunc": [
+    {
+      "args": "(int key,int x,int y)",
+      "argsT": [
+        {
+          "name": "key",
+          "type": "int"
+        },
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "argsoriginal": "(int key,int x,int y)",
+      "call_args": "(key,x,y)",
+      "cimguiname": "ImGui_ImplGLUT_SpecialFunc",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_SpecialFunc",
+      "ov_cimguiname": "ImGui_ImplGLUT_SpecialFunc",
+      "ret": "void",
+      "signature": "(int,int,int)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGLUT_SpecialUpFunc": [
+    {
+      "args": "(int key,int x,int y)",
+      "argsT": [
+        {
+          "name": "key",
+          "type": "int"
+        },
+        {
+          "name": "x",
+          "type": "int"
+        },
+        {
+          "name": "y",
+          "type": "int"
+        }
+      ],
+      "argsoriginal": "(int key,int x,int y)",
+      "call_args": "(key,x,y)",
+      "cimguiname": "ImGui_ImplGLUT_SpecialUpFunc",
+      "defaults": [],
+      "funcname": "ImGui_ImplGLUT_SpecialUpFunc",
+      "ov_cimguiname": "ImGui_ImplGLUT_SpecialUpFunc",
+      "ret": "void",
+      "signature": "(int,int,int)",
+      "stname": ""
+    }
+  ],
   "ImGui_ImplGlfw_CharCallback": [
     {
       "args": "(GLFWwindow* window,unsigned int c)",
@@ -197,258 +481,156 @@
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL2_CreateDeviceObjects": [
+  "ImGui_ImplMetal_CreateDeviceObjects": [
     {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL2_CreateDeviceObjects",
+      "args": "(id_MTLDevice device)",
+      "argsT": [
+        {
+          "name": "device",
+          "type": "id_MTLDevice"
+        }
+      ],
+      "argsoriginal": "(id<MTLDevice> device)",
+      "call_args": "(device)",
+      "cimguiname": "ImGui_ImplMetal_CreateDeviceObjects",
       "defaults": [],
-      "funcname": "ImGui_ImplOpenGL2_CreateDeviceObjects",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_CreateDeviceObjects",
+      "funcname": "ImGui_ImplMetal_CreateDeviceObjects",
+      "ov_cimguiname": "ImGui_ImplMetal_CreateDeviceObjects",
       "ret": "bool",
-      "signature": "()",
+      "signature": "(id_MTLDevice)",
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL2_CreateFontsTexture": [
+  "ImGui_ImplMetal_CreateFontsTexture": [
     {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL2_CreateFontsTexture",
+      "args": "(id_MTLDevice device)",
+      "argsT": [
+        {
+          "name": "device",
+          "type": "id_MTLDevice"
+        }
+      ],
+      "argsoriginal": "(id<MTLDevice> device)",
+      "call_args": "(device)",
+      "cimguiname": "ImGui_ImplMetal_CreateFontsTexture",
       "defaults": [],
-      "funcname": "ImGui_ImplOpenGL2_CreateFontsTexture",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_CreateFontsTexture",
+      "funcname": "ImGui_ImplMetal_CreateFontsTexture",
+      "ov_cimguiname": "ImGui_ImplMetal_CreateFontsTexture",
       "ret": "bool",
-      "signature": "()",
+      "signature": "(id_MTLDevice)",
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL2_DestroyDeviceObjects": [
+  "ImGui_ImplMetal_DestroyDeviceObjects": [
     {
       "args": "()",
       "argsT": [],
       "argsoriginal": "()",
       "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL2_DestroyDeviceObjects",
+      "cimguiname": "ImGui_ImplMetal_DestroyDeviceObjects",
       "defaults": [],
-      "funcname": "ImGui_ImplOpenGL2_DestroyDeviceObjects",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_DestroyDeviceObjects",
+      "funcname": "ImGui_ImplMetal_DestroyDeviceObjects",
+      "ov_cimguiname": "ImGui_ImplMetal_DestroyDeviceObjects",
       "ret": "void",
       "signature": "()",
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL2_DestroyFontsTexture": [
+  "ImGui_ImplMetal_DestroyFontsTexture": [
     {
       "args": "()",
       "argsT": [],
       "argsoriginal": "()",
       "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL2_DestroyFontsTexture",
+      "cimguiname": "ImGui_ImplMetal_DestroyFontsTexture",
       "defaults": [],
-      "funcname": "ImGui_ImplOpenGL2_DestroyFontsTexture",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_DestroyFontsTexture",
+      "funcname": "ImGui_ImplMetal_DestroyFontsTexture",
+      "ov_cimguiname": "ImGui_ImplMetal_DestroyFontsTexture",
       "ret": "void",
       "signature": "()",
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL2_Init": [
+  "ImGui_ImplMetal_Init": [
     {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL2_Init",
+      "args": "(id_MTLDevice device)",
+      "argsT": [
+        {
+          "name": "device",
+          "type": "id_MTLDevice"
+        }
+      ],
+      "argsoriginal": "(id<MTLDevice> device)",
+      "call_args": "(device)",
+      "cimguiname": "ImGui_ImplMetal_Init",
       "defaults": [],
-      "funcname": "ImGui_ImplOpenGL2_Init",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_Init",
+      "funcname": "ImGui_ImplMetal_Init",
+      "ov_cimguiname": "ImGui_ImplMetal_Init",
       "ret": "bool",
-      "signature": "()",
+      "signature": "(id_MTLDevice)",
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL2_NewFrame": [
+  "ImGui_ImplMetal_NewFrame": [
     {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL2_NewFrame",
+      "args": "(MTLRenderPassDescriptor* renderPassDescriptor)",
+      "argsT": [
+        {
+          "name": "renderPassDescriptor",
+          "type": "MTLRenderPassDescriptor*"
+        }
+      ],
+      "argsoriginal": "(MTLRenderPassDescriptor* renderPassDescriptor)",
+      "call_args": "(renderPassDescriptor)",
+      "cimguiname": "ImGui_ImplMetal_NewFrame",
       "defaults": [],
-      "funcname": "ImGui_ImplOpenGL2_NewFrame",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_NewFrame",
+      "funcname": "ImGui_ImplMetal_NewFrame",
+      "ov_cimguiname": "ImGui_ImplMetal_NewFrame",
       "ret": "void",
-      "signature": "()",
+      "signature": "(MTLRenderPassDescriptor*)",
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL2_RenderDrawData": [
+  "ImGui_ImplMetal_RenderDrawData": [
     {
-      "args": "(ImDrawData* draw_data)",
+      "args": "(ImDrawData* draw_data,id_MTLCommandBuffer>_commandBuffer,id<MTLRenderCommandEncoder commandBuffer,id_MTLCommandBuffer>_commandBuffer,id<MTLRenderCommandEncoder commandEncoder)",
       "argsT": [
         {
           "name": "draw_data",
           "type": "ImDrawData*"
-        }
-      ],
-      "argsoriginal": "(ImDrawData* draw_data)",
-      "call_args": "(draw_data)",
-      "cimguiname": "ImGui_ImplOpenGL2_RenderDrawData",
-      "defaults": [],
-      "funcname": "ImGui_ImplOpenGL2_RenderDrawData",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_RenderDrawData",
-      "ret": "void",
-      "signature": "(ImDrawData*)",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL2_Shutdown": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL2_Shutdown",
-      "defaults": [],
-      "funcname": "ImGui_ImplOpenGL2_Shutdown",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_Shutdown",
-      "ret": "void",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL3_CreateDeviceObjects": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL3_CreateDeviceObjects",
-      "defaults": [],
-      "funcname": "ImGui_ImplOpenGL3_CreateDeviceObjects",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_CreateDeviceObjects",
-      "ret": "bool",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL3_CreateFontsTexture": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL3_CreateFontsTexture",
-      "defaults": [],
-      "funcname": "ImGui_ImplOpenGL3_CreateFontsTexture",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_CreateFontsTexture",
-      "ret": "bool",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL3_DestroyDeviceObjects": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL3_DestroyDeviceObjects",
-      "defaults": [],
-      "funcname": "ImGui_ImplOpenGL3_DestroyDeviceObjects",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_DestroyDeviceObjects",
-      "ret": "void",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL3_DestroyFontsTexture": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL3_DestroyFontsTexture",
-      "defaults": [],
-      "funcname": "ImGui_ImplOpenGL3_DestroyFontsTexture",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_DestroyFontsTexture",
-      "ret": "void",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL3_Init": [
-    {
-      "args": "(const char* glsl_version)",
-      "argsT": [
+        },
+        [],
         {
-          "name": "glsl_version",
-          "type": "const char*"
-        }
-      ],
-      "argsoriginal": "(const char* glsl_version=NULL)",
-      "call_args": "(glsl_version)",
-      "cimguiname": "ImGui_ImplOpenGL3_Init",
-      "defaults": {
-        "glsl_version": "NULL"
-      },
-      "funcname": "ImGui_ImplOpenGL3_Init",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_Init",
-      "ret": "bool",
-      "signature": "(const char*)",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL3_NewFrame": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL3_NewFrame",
-      "defaults": [],
-      "funcname": "ImGui_ImplOpenGL3_NewFrame",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_NewFrame",
-      "ret": "void",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL3_RenderDrawData": [
-    {
-      "args": "(ImDrawData* draw_data)",
-      "argsT": [
+          "name": "commandBuffer",
+          "type": "id<MTLRenderCommandEncoder"
+        },
+        [],
         {
-          "name": "draw_data",
-          "type": "ImDrawData*"
+          "name": "commandEncoder",
+          "type": "id<MTLRenderCommandEncoder"
         }
       ],
-      "argsoriginal": "(ImDrawData* draw_data)",
-      "call_args": "(draw_data)",
-      "cimguiname": "ImGui_ImplOpenGL3_RenderDrawData",
+      "argsoriginal": "(ImDrawData* draw_data,id<MTLCommandBuffer> commandBuffer,id<MTLRenderCommandEncoder> commandEncoder)",
+      "call_args": "(draw_data,_commandBuffer,commandBuffer,_commandBuffer,commandEncoder)",
+      "cimguiname": "ImGui_ImplMetal_RenderDrawData",
       "defaults": [],
-      "funcname": "ImGui_ImplOpenGL3_RenderDrawData",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_RenderDrawData",
+      "funcname": "ImGui_ImplMetal_RenderDrawData",
+      "ov_cimguiname": "ImGui_ImplMetal_RenderDrawData",
       "ret": "void",
-      "signature": "(ImDrawData*)",
+      "signature": "(ImDrawData*,id_MTLCommandBuffer>_commandBuffer,id<MTLRenderCommandEncoder,id_MTLCommandBuffer>_commandBuffer,id<MTLRenderCommandEncoder)",
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL3_Shutdown": [
+  "ImGui_ImplMetal_Shutdown": [
     {
       "args": "()",
       "argsT": [],
       "argsoriginal": "()",
       "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL3_Shutdown",
+      "cimguiname": "ImGui_ImplMetal_Shutdown",
       "defaults": [],
-      "funcname": "ImGui_ImplOpenGL3_Shutdown",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_Shutdown",
+      "funcname": "ImGui_ImplMetal_Shutdown",
+      "ov_cimguiname": "ImGui_ImplMetal_Shutdown",
       "ret": "void",
       "signature": "()",
       "stname": ""
