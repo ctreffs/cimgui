@@ -11,7 +11,7 @@ History:
 Initially cimgui was developed by Stephan Dilly as hand-written code but lately turned into an auto-generated version by sonoro1234 in order to keep up with imgui more easily (letting the user select the desired branch and commit)
 
 Notes:
-* currently this wrapper is based on version [1.73 of Dear ImGui]
+* currently this wrapper is based on version [1.74 of Dear ImGui]
 * only functions, structs and enums from imgui.h are wrapped.
 * if you are interested in imgui implementations you should look LuaJIT-ImGui project.
 * overloaded function names try to be the most compatible with traditional cimgui names. So all naming is algorithmic except for those names that were in conflict with widely used cimgui names and were thus coded in a table (https://github.com/cimgui/cimgui/blob/master/generator/generator.lua#L58). Current overloaded function names can be found in (https://github.com/cimgui/cimgui/blob/master/generator/output/overloads.txt)
@@ -46,17 +46,17 @@ Notes:
   * ov_cimguiname : the overloaded cimgui name (if absent it would be taken from cimguiname)
   * cimguiname : the name without overloading (this should be used if there is not ov_cimguiname)
   * ret : the return type
-  * retref : is setted if original return type is a reference. (will be a pointer in cimgui)
+  * retref : is set if original return type is a reference. (will be a pointer in cimgui)
   * argsT : an array of collections (each one with type: argument type and name: the argument name)
   * args : a string of argsT concatenated and separated by commas
   * call_args : a string with the argument names separated by commas for calling imgui function
   * defaults : a collection in which key is argument name and value is the default value.
   * manual : will be true if this function is hand-written (not generated)
-  * isvararg : is setted if some argument is a vararg
-  * constructor : is setted if the function is a constructor for a class
-  * destructor : is setted if the function is a destructor for a class
-  * templated : is setted if the function belongs to a templated class (ImVector)
-  * templatedgen: is setted if the function belongs to a struct generated from template (ImVector_ImWchar)
+  * isvararg : is set if some argument is a vararg
+  * constructor : is set if the function is a constructor for a class
+  * destructor : is set if the function is a destructor for a class
+  * templated : is set if the function belongs to a templated class (ImVector)
+  * templatedgen: is set if the function belongs to a struct generated from template (ImVector_ImWchar)
   * nonUDT : if present can be 1 or 2 (explained meaning in usage) if return type was a user defined type
 ### structs_and_enums description
 * Is is a collection with two items:
