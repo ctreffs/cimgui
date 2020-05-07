@@ -580,26 +580,9 @@
           "type": "MTLRenderPassDescriptor*"
         }
       ],
-      "argsoriginal": "(const char* glsl_version=((void*)0))",
-      "call_args": "(glsl_version)",
-      "cimguiname": "ImGui_ImplOpenGL3_Init",
-      "defaults": {
-        "glsl_version": "((void*)0)"
-      },
-      "funcname": "ImGui_ImplOpenGL3_Init",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_Init",
-      "ret": "bool",
-      "signature": "(const char*)",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL3_NewFrame": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL3_NewFrame",
+      "argsoriginal": "(MTLRenderPassDescriptor* renderPassDescriptor)",
+      "call_args": "(renderPassDescriptor)",
+      "cimguiname": "ImGui_ImplMetal_NewFrame",
       "defaults": [],
       "funcname": "ImGui_ImplMetal_NewFrame",
       "ov_cimguiname": "ImGui_ImplMetal_NewFrame",

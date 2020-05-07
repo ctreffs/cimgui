@@ -36,7 +36,6 @@
   "ImGuiDataType": "int",
   "ImGuiDataTypeInfo": "struct ImGuiDataTypeInfo",
   "ImGuiDir": "int",
-  "ImGuiDockNodeFlags": "int",
   "ImGuiDragDropFlags": "int",
   "ImGuiDragFlags": "int",
   "ImGuiFocusedFlags": "int",
