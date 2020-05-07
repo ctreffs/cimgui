@@ -93,6 +93,26 @@ local function str_split(str, pat)
 	end
 	return t
 end
+local function strsplit(str, pat)
+    local t = {} 
+	local t2 = {}
+    local fpat = "(.-)" .. pat
+    local last_end = 1
+    local s, e, cap, cap2 = str:find(fpat, 1)
+    while s do
+        table.insert(t,cap)
+		table.insert(t2,cap2)
+        last_end = e+1
+        s, e, cap, cap2 = str:find(fpat, last_end)
+    end
+    if last_end <= #str then
+        cap = str:sub(last_end)
+        table.insert(t, cap)
+    elseif str:sub(-1)==pat then
+        table.insert(t, "")
+    end
+    return t,t2
+end
 local function split_comment(line)
     local comment = line:match("(%s*//.*)") or ""
     line = line:gsub("%s*//.*","")
@@ -109,26 +129,88 @@ end
 local function clean_spaces(cad)
     cad = strip(cad)
     cad = cad:gsub("%s+"," ") --not more than one space
-    cad = cad:gsub("%s*([%(%),=])%s*","%1") --not spaces with ( , )
+    cad = cad:gsub("%s*([%(%),=:%+])%s*","%1") --not spaces with ( , ) or ( = ) or ( : ) or + 
+	--clean %d * %d (could be done above but type*name should be treated different in other places)
+	cad = cad:gsub("(%d)%s*(%*)%s*(%d)","%1%2%3")
     return cad
 end
-function strsplit(str, pat)
-    local t = {} 
-    local fpat = "(.-)" .. pat
-    local last_end = 1
-    local s, e, cap = str:find(fpat, 1)
-    while s do
-        table.insert(t,cap)
-        last_end = e+1
-        s, e, cap = str:find(fpat, last_end)
-    end
-    if last_end <= #str then
-        cap = str:sub(last_end)
-        table.insert(t, cap)
-    elseif str:sub(-1)==pat then
-        table.insert(t, "")
-    end
-    return t
+
+------------------------------------
+local function parse_enum_value(enline, allenums)
+	local value = enline.value
+	local function clean(val)
+		if type(val)=="string" then
+			return clean_spaces(val)
+		else
+			return val
+		end
+	end
+	
+	if type(value)=="number" then
+		return value
+	elseif type(value)=="string" then 
+		--numbers
+		local numval = tonumber(value)
+		if numval then return numval end 
+		--already in allenums
+		if allenums[clean(value)] then return allenums[clean(value)] end
+		--must be several and operators
+		--precedence order (hope not ())
+		assert(not value:match("[%(%)]"))
+		local several,seps = strsplit(value,"([<>&|~%+]+)") 
+		--M.prtable(value,several,seps)
+		assert(#seps+1==#several)
+		
+		local i = 1
+		local ik = 1
+		local sepk = {"~","<<",">>","&","^","|","+"}
+		while(#seps>0) do
+			local sep = sepk[ik]
+			local v = seps[i]
+			if sep==v then
+				local val1 = clean(several[i])
+				local val2 = clean(several[i+1])
+				if allenums[val1] then val1 = allenums[val1] end
+				if allenums[val2] then val2 = allenums[val2] end
+				if v=="~" then
+					assert(several[i]==" " or several[i]=="")
+					several[i] = bit.bnot(val2)
+				elseif v=="<<" then
+					several[i] = bit.lshift(val1,val2)
+				elseif v==">>" then
+					several[i] = bit.rshift(val1,val2)
+				elseif v=="&" then
+					several[i] = bit.band(val1,val2)
+				elseif v=="^" then
+					error"^ operator still not done"
+				elseif v=="|" then
+					several[i] = bit.bor(val1,val2)
+				elseif v=="+" then
+					several[i] = val1 + val2
+				else
+					error("unknown operator "..v)
+				end
+				table.remove(several,i+1)
+				table.remove(seps,i)
+			else
+				i = i + 1
+			end				
+
+			if i>#seps then
+				ik = ik + 1 --next operator
+				if ik > #sepk then break end
+				i = 1
+			end
+		end
+		if #seps>0 or type(several[1])~="number" then
+			M.prtable("enline",enline)
+			M.prtable(several,seps)
+			M.prtable(allenums)
+		end
+		assert(#seps==0)
+		assert(type(several[1])=="number")
+		return several[1]
+	end
 end
 --------------------------------------------------------------------------
 local function save_data(filename,...)
@@ -180,15 +262,19 @@ local function getRE()
 	namespace_re = "^([^;{}]-namespace[^;{}]-%b{})",
 	class_re = "^([^;{}]-class[^;{}]-%b{}%s*;)",
 	typedef_re = "^\n*(typedef[^;]+;)",
+	typedef_st_re = "^\n*(typedef%s+struct%s*%b{}.+;)",
 	functypedef_re = "^\n*%s*(typedef[%w%s%*_]+%(%s*%*%s*[%w_]+%s*%)%s*%b()%s*;)",
 	functypedef_re = "^\n*%s*(typedef[%w%s%*_]+%([^*]*%*%s*[%w_]+%s*%)%s*%b()%s*;)",
-	vardef_re = "^\n*([^;{}%(%)]+;)",
+	--vardef_re = "^\n*([^;{}%(%)]+;)",
+	--change for things as
+	--[[ImU8 Used4kPagesMap[((sizeof(ImWchar16) == 2 ? 0xFFFF : 0x10FFFF)+1)/4096/8];]]
+	vardef_re = "^\n*([^;{}]+;)",
 	functionD_re = "^([^;{}]-%b()[\n%s%w]*%b{})",
 	--functionD_re = "^([^;{}]-%b()[^{}%(%)]*%b{})",
 	functype_re = "^%s*[%w%s%*]+%(%*[%w_]+%)%([^%(%)]*%)%s*;"
 	}
 	
-	local resN = {"functypedef_re","functype_re","function_re","functionD_re","struct_re","enum_re","union_re","namespace_re","class_re","typedef_re","vardef_re"}
+	local resN = {"functypedef_re","functype_re","function_re","functionD_re","typedef_st_re","struct_re","enum_re","union_re","namespace_re","class_re","typedef_re","vardef_re"}
 	
 	return res,resN
 end
@@ -219,7 +305,7 @@ local function parseItems(txt,dumpit)
 				ini = e + 1
 				if dumpit then
 					print(item)
-					print(ire,"------------------------------------------------------")
+					print(ire,re_name,"------------------------------------------------------")
 				end
 				break
 			end
@@ -231,6 +317,7 @@ local function parseItems(txt,dumpit)
 				if not onlyspaces then
 					print(ini,#txt);
 					print(txt);
+					print"item:"
 					print(item)
 					error"parseItems error"
 				end
@@ -300,6 +387,8 @@ local function name_overloadsAlgo(v)
             end
         end
     end
+	--avoid empty postfix which will be reserved to generic
+	for i,v in ipairs(bb) do if v=="" then bb[i]="Nil" end end
     return aa,bb
 end
 local function typetoStr(typ)
@@ -348,9 +437,9 @@ local function parseFunction(self,stname,lineorig,namespace)
 	extraconst = extraconst:match("const")
 
 	if not args then
-	print"not gettint args in"
-	print(line,lineorig)
-	print(funcname,"args",args)
+		print"not gettint args in"
+		print(line,lineorig)
+		print(funcname,"args",args)
     end
 	
     local argscsinpars = args:gsub("(=[^,%(%)]*)(%b())","%1")
@@ -373,15 +462,16 @@ local function parseFunction(self,stname,lineorig,namespace)
 		if self.typenames[stname] ~= template then --rule out template typename
 		te = template:gsub("%s","_")
         te = te:gsub("%*","Ptr")
-		te = "_"..te
 
 		self.templates[ttype] = self.templates[ttype] or {}
 		self.templates[ttype][template] = te
+		te = "_"..te
 		end
 	end
 	--end
-    argscsinpars = argscsinpars:gsub("<([%w_%*]+)>",te) --ImVector
-    
+
+	argscsinpars = argscsinpars:gsub("<([%w_%*%s]+)>",te) --ImVector
+
     local argsArr = {}
     local functype_re =       "^%s*[%w%s%*]+%(%*[%w_]+%)%([^%(%)]*%)"
     local functype_reex =     "^(%s*[%w%s%*]+)%(%*([%w_]+)%)(%([^%(%)]*%))"
@@ -432,7 +522,7 @@ local function parseFunction(self,stname,lineorig,namespace)
             --only post error if not manual
             local cname = self.getCname(stname,funcname) --cimguiname
             if not self.manuals[cname] then
-                print("reference to no const arg in",funcname,argscsinpars)
+                print("reference to no const arg in",funcname,argscsinpars,arg)
             end
         end
     end
@@ -519,14 +609,16 @@ local function AdjustArguments(FP)
 end
 local function ADDnonUDT(FP)
     local defsT = FP.defsT
-    local newcdefs = {}
-    --for cimguiname,defs in pairs(defsT) do
-    --for i,defT in ipairs(defs) do
-		--local t = {cimguiname=cimguiname,signature=defT.signature,ret=defT.ret}
+    --local newcdefs = {}
     for numcdef,t in ipairs(FP.funcdefs) do
         if t.cimguiname then
         local cimf = defsT[t.cimguiname]
         local defT = cimf[t.signature]
+		--find index
+		local index
+		for ind,ddd in ipairs(cimf) do
+			if ddd == defT then index=ind; break end
+		end
         --if UDT return generate nonUDT version
 		local isUDT = false
 		for _,udt_ret in ipairs(FP.UDTs) do
@@ -548,40 +640,25 @@ local function ADDnonUDT(FP)
             local comma = (#defT.argsT > 0) and "," or ""
             defT2.args = "("..defT.ret.." *pOut"..comma..defT.args:sub(2)
             defT2.ret = "void"
-            defT2.ov_cimguiname = (defT2.ov_cimguiname or defT2.cimguiname).."_nonUDT"
+            defT2.ov_cimguiname = (defT2.ov_cimguiname or defT2.cimguiname) --.."_nonUDT"
             defT2.nonUDT = 1
             defT2.retref = nil
-            defsT[t.cimguiname][#defsT[t.cimguiname] + 1] = defT2
-            defsT[t.cimguiname][t.signature.."nonUDT"] = defT2
-            table.insert(newcdefs,{stname=t.stname,funcname=t.funcname,args=args,argsc=argscsinpars,signature=t.signature.."nonUDT",cimguiname=t.cimguiname,call_args=call_args,ret =t.ret})
-            --converting to Simple type----------------------------------------------------
-            local defT3 = {}
-            --first strings
-            for k,v in pairs(defT) do
-                defT3[k] = v
-            end
-            --then argsT table
-            defT3.argsT = {}
-            for k,v in ipairs(defT.argsT) do
-                table.insert(defT3.argsT,{type=v.type,name=v.name})
-            end
-            local comma = (#defT.argsT > 0) and "," or ""
-            --defT3.args = "("..defT.ret.." *pOut"..comma..defT.args:sub(2)
-            defT3.ret = defT.ret.."_Simple"
-            defT3.retorig = defT.ret
-            defT3.ov_cimguiname = (defT3.ov_cimguiname or defT3.cimguiname).."_nonUDT2"
-            defT3.nonUDT = 2
-            defT3.retref = nil
-            defsT[t.cimguiname][#defsT[t.cimguiname] + 1] = defT3
-            defsT[t.cimguiname][t.signature.."nonUDT2"] = defT3
-            table.insert(newcdefs,{stname=t.stname,funcname=t.funcname,args=args,argsc=argscsinpars,signature=t.signature.."nonUDT2",cimguiname=t.cimguiname,call_args=call_args,ret =t.ret})
+			
+			--replace
+			cimf[index] = defT2
+			cimf[t.signature] = defT2
+			FP.funcdefs[numcdef] = {stname=t.stname,funcname=t.funcname,args=args,argsc=argscsinpars,signature=t.signature,cimguiname=t.cimguiname,call_args=call_args,ret =t.ret}
+			
+            -- defsT[t.cimguiname][#defsT[t.cimguiname] + 1] = defT2
+            -- defsT[t.cimguiname][t.signature.."nonUDT"] = defT2
+            -- table.insert(newcdefs,{stname=t.stname,funcname=t.funcname,args=args,argsc=argscsinpars,signature=t.signature.."nonUDT",cimguiname=t.cimguiname,call_args=call_args,ret =t.ret})
         end
+		else print("not cimguiname in");M.prtable(t)
         end
-		--end
     end
-    for i,v in ipairs(newcdefs) do
-        table.insert(FP.funcdefs,v)
-    end
+    -- for i,v in ipairs(newcdefs) do
+        -- table.insert(FP.funcdefs,v)
+    -- end
 end
 
 local function ADDdestructors(FP)
@@ -729,8 +806,8 @@ function M.Parser()
 						linet = linet:gsub("typedef ","")
 						linet = linet:gsub("%(%*("..key..")%)","(*)")
 						self.typedefs_dict[key] = linet
-					else
-						print("not found function typedef")
+					elseif not line:match"typedef%s*struct" then --discard typedef struct
+						print("typedef not found")
 						print(key,value,line)
 					end
 				end
@@ -794,14 +871,29 @@ function M.Parser()
 	function par:clean_struct(stru)
 		local outtab = {}
 		local iner = strip_end(stru:match("%b{}"):sub(2,-2))
-		local stname = stru:match("struct%s*(%S+)%s*%b{}")
+		local inistruct = clean_spaces(stru:match("(.-)%b{}"))
+		--local stname = stru:match("struct%s*(%S+)%s*%b{}")
+		local stname, derived
+		if inistruct:match":" then
+			stname,derived = inistruct:match"struct%s*([^%s:]+):(.+)"
+			derived = derived:match"(%S+)$"
+		else
+			stname = inistruct:match"struct%s(%S+)"
+		end
+
+		if derived then print(stname,"derived from",derived) end
+		
 		if not stname then
 			print(stru)
 			error"could not get stname"
 		end
 		--initial
-		table.insert(outtab,stru:match("(.-)%b{}"))
+		--table.insert(outtab,stru:match("(.-)%b{}"))
+		table.insert(outtab,"\nstruct "..stname.."\n")
 		table.insert(outtab,"{")
+		if derived then
+			table.insert(outtab,"\n    "..derived.." _"..derived..";")
+		end
 		local itlist,itemsin = parseItems(iner)
 		if #itlist == 0 then return "" end --here we avoid empty structs
 		for j,it in ipairs(itlist) do
@@ -859,7 +951,7 @@ function M.Parser()
 				local namespace = it.item:match("namespace%s+(%S+)")
 				local nspparr,itemsnsp = parseItems(nsp)
 				for insp,itnsp in ipairs(nspparr) do
-					if itnsp.re_name == "struct_re" then --or itnsp.re_name == "functionD_re" then
+					if itnsp.re_name == "struct_re"  or itnsp.re_name == "typedef_st_re" then
 						--print("in mamespace",itnsp.item,namespace)
 						table.insert(outtab,itnsp.item)
 					end
@@ -874,6 +966,9 @@ function M.Parser()
 				table.insert(outtab,"\ntypedef enum ".. enumbody..enumname..";")
 			elseif it.re_name == "struct_re" then
 				local cleanst,structname = self:clean_struct(it.item)
+				
+				--if not structname then print("NO NAME",cleanst,it.item) end
+				
 				--if not void stname or templated
 				if structname and not self.typenames[structname] then
 				table.insert(outtab,cleanst)
@@ -915,9 +1010,9 @@ function M.Parser()
 			local typen,rest = line:match("%s*([^,]+)%s(%S+[,;])")
 			--local template_type = typen:match("/%*<(.+)>%*/")
 			--if template_type then typen = typen:match("(.+)/%*") end
-                if not typen then -- Lets try Type*name
-                    typen,rest = line:match("([^,]+%*)(%S+[,;])")
-                end
+            if not typen then -- Lets try Type*name
+                typen,rest = line:match("([^,]+%*)(%S+[,;])")
+            end
 			local template_type 
 			for k,v in pairs(self.templates) do
 				template_type = typen:match(k.."_(.+)")
@@ -928,7 +1023,14 @@ function M.Parser()
 				template_type = template_type:gsub("Ptr","%*")
 			end
 			for name in rest:gmatch("([^%s,;]+)%s?[,;]") do
-				table.insert(outtab,{type=typen,template_type=template_type,name=name})
+				--unnamed unions
+				local union_re = "^([^;{}]-union[^;{}]-%b{}[%s%w_%(%)]*;)"
+				if line:match(union_re) and name == "}" then
+					typen = typen..name
+					name = ""
+				end
+				local namebitfield,bitfield = name:match("([^:]+):(%d+)") --take care of bitfields
+				table.insert(outtab,{type=typen,template_type=template_type,name=namebitfield or name,bitfield=bitfield})
 			end
 		end
 	end
@@ -967,10 +1069,12 @@ function M.Parser()
 			end
 		end
 		--then structs and enums
+		local enumsordered = {}
 		for i,it in ipairs(itemsarr) do
 			if it.re_name == "enum_re" then
 				local enumname = it.item:match"^%s*enum%s+([^%s;{}]+)"
 				outtab.enums[enumname] = {}
+				table.insert(enumsordered,enumname)
 				self.order[enumname] = i
 				local inner = strip_end(it.item:match("%b{}"):sub(2,-2))
 				local enumarr = str_split(inner,",")
@@ -981,8 +1085,18 @@ function M.Parser()
 					else --increment by one
 						local name = line:match("%s*([^,]+)")
 						local enum_table = outtab.enums[enumname]
-						local value = enum_table[#enum_table] and (enum_table[#enum_table].value + 1) or 0
+						local prevvalue = enum_table[#enum_table] and enum_table[#enum_table].value
+						local value --= enum_table[#enum_table] and (enum_table[#enum_table].value + 1) or 0
+						if not prevvalue then
+							value = 0
+						elseif tonumber(prevvalue) then
+							value = prevvalue +1
+						else --should be string
+							value = prevvalue .. "+1"
+						end
+						if name then --avoid last , if present
 						table.insert(outtab.enums[enumname],{name=name,value=value})
+						end
 					end
 				end
 			elseif it.re_name == "struct_re" then
@@ -1021,24 +1135,11 @@ function M.Parser()
 		--calcule size of name[16+1] [xxx_COUNT]
 		local allenums = {}
 		--first calc_value in enums
-		for enumname,enum in pairs(outtab.enums) do
+		for i,enumname in ipairs(enumsordered) do
+		--for enumname,enum in pairs(outtab.enums) do
+			local enum = outtab.enums[enumname]
 			for i,t in ipairs(enum) do
-				local val = tonumber(t.value)
-				if val then
-					t.calc_value = val
-				elseif t.value:match"<<" then
-					local v1,v2 = t.value:match("(%d+)%s*<<%s*(%d+)")
-					t.calc_value = bit.lshift(v1,v2)
-				elseif t.value:match"|" then --or several enums
-					local ens = t.value
-					ens = strsplit(ens,"|")
-					for i,v in ipairs(ens) do ens[i] = allenums[clean_spaces(v)] end
-					t.calc_value = bit.bor(unpack(ens))
-				elseif allenums[t.value] then
-					t.calc_value = allenums[t.value]
-				else
-					print("Error unknown value in enums",t.value)
-				end
+				t.calc_value = parse_enum_value(t,allenums)
 				assert(t.calc_value)
 				allenums[t.name] = t.calc_value
 			end
@@ -1052,13 +1153,13 @@ function M.Parser()
 						t.size = tonumber(val)
 					elseif allenums[val] then
 						t.size = allenums[val]
-					elseif val:match"%+" then
-						local s1,s2 = val:match("(%d+)%s*%+%s*(%d+)")
-						t.size = s1+s2
 					else
-						print("Error size is",val)
+						local f,err = loadstring("estevalor="..val)
+						if not f then print("error on loadstring",err,"with val:",val) end
+						f()
+						t.size = estevalor
 					end
-					assert(t.size)
+					assert(t.size,val)
 				end
 			end
 		end
@@ -1094,7 +1195,7 @@ function M.Parser()
                     --take overloaded name from manual table or algorythm
                     t.ov_cimguiname = self.getCname_overload(t.stname,t.funcname,t.signature) or k..typetoStr(post[i])
                     table.insert(strt,string.format("%d\t%s\t%s %s",i,t.ret,t.ov_cimguiname,t.signature))
-                    --prtable(typesc[i])
+                    --M.prtable(typesc[i],post)
                 end
                 --check not two names are equal (produced by bad cimguiname_overload)
                 for i=1,#v-1 do 
@@ -1290,7 +1391,7 @@ M.serializeTableF = function(t)
 	return M.serializeTable("defs",t).."\nreturn defs"
 end
 --iterates lines from a gcc/clang -E in a specific location
-local function location(file,locpathT,defines)
+local function location(file,locpathT,defines,COMPILER)
 	local define_re = "^#define%s+([^%s]+)%s+([^%s]+)$"
 	local number_re = "^-?[0-9]+u*$"
 	local hex_re = "0x[0-9a-fA-F]+u*$"
@@ -1300,6 +1401,7 @@ local function location(file,locpathT,defines)
     else --gcc, clang
         location_re = '^# (%d+) "([^"]*)"'
     end
+
     local path_reT = {}
     for i,locpath in ipairs(locpathT) do
         table.insert(path_reT,'^.*[\\/]('..locpath..')%.h$')
@@ -1325,6 +1427,7 @@ local function location(file,locpathT,defines)
             if #line==0 then --nothing on emptyline
             elseif not line:match("%S") then --nothing if only spaces
             elseif line:sub(1,1) == "#" then
+			--elseif line:match"^%s*#" then
                 -- Is this a location pragma?
                 local loc_num_t,location_match = line:match(location_re)
                 if location_match then
@@ -1370,4 +1473,29 @@ local function location(file,locpathT,defines)
     return location_it
 end
 M.location = location
+
+--[=[
+-- tests
+local line = [[struct ImDrawListSharedData
+{
+    ImVec2 TexUvWhitePixel;
+    ImFont* Font;
+    float FontSize;
+    float CurveTessellationTol;
+    float CircleSegmentMaxError;
+    ImVec4 ClipRectFullscreen;
+    ImDrawListFlags InitialFlags;
+    ImVec2 ArcFastVtx[12 * 1];
+    ImU8 CircleSegmentCounts[64];
+    ImDrawListSharedData();
+    void SetCircleSegmentMaxError(float max_error);
+};]]
+local parser = M.Parser()
+parser:insert(line)
+parser:do_parse()
+--M.prtable(parser)
+M.prtable(parser:gen_structs_and_enums_table())
+--]=]
+--print(clean_spaces[[ImVec2 ArcFastVtx[12 * 1];]])
+
 return M
